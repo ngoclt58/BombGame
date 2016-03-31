@@ -7,8 +7,8 @@ import javax.swing.JFrame;
 public class GUI extends JFrame {
 	private PlayGamePanel playGamePanel;
 	private static final long serialVersionUID = 1L;
-	public static final int HEIGHT = 600;
-	public static final int WIDTH = 600;
+	public static final int HEIGHT = 700;
+	public static final int WIDTH = 700;
 
 	public GUI() {
 		initGUI();

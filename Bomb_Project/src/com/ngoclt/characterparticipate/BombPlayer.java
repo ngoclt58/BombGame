@@ -13,8 +13,8 @@ public class BombPlayer extends DadParticipate {
 	public static final int WIDTH_IMG = 45;
 	public static final int HEIGHT_IMG = 45;
 
-	public static final int START_X = 250;
-	public static final int START_Y = 200;
+	public static final int START_X = 300;
+	public static final int START_Y = 300;
 	
 	public static final int TIME_OUT_TO_FIRE = 1000;
 
@@ -25,7 +25,8 @@ public class BombPlayer extends DadParticipate {
 	private int numBombCanPut = 1;
 	private boolean bombPlayerIsCollisionWithBomb = false;
 	private boolean bombPlayerIsCollisionWithMonster = false;
-
+	private ImageIcon imageIconBombPlayer,imageIconDeath;
+	
 	public BombPlayer(int x, int y, int size, int orient, int speed,
 			int speedFire) {
 		super(x, y, size, orient, speed);
@@ -71,30 +72,30 @@ public class BombPlayer extends DadParticipate {
 
 	public void draw(Graphics2D g2d) {
 		if (getOrient() == LEFT) {
-			ImageIcon imageIcon = new ImageIcon(getClass().getResource(
+			imageIconBombPlayer = new ImageIcon(getClass().getResource(
 					"/image/bomber_left.png"));
-			imaArr[0] = imageIcon.getImage();
+			imaArr[0] = imageIconBombPlayer.getImage();
 			g2d.drawImage(imaArr[0], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
 					null);
 		}
 		if (getOrient() == RIGHT) {
-			ImageIcon imageIcon = new ImageIcon(getClass().getResource(
+			imageIconBombPlayer = new ImageIcon(getClass().getResource(
 					"/image/bomber_right.png"));
-			imaArr[1] = imageIcon.getImage();
+			imaArr[1] = imageIconBombPlayer.getImage();
 			g2d.drawImage(imaArr[1], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
 					null);
 		}
 		if (getOrient() == UP) {
-			ImageIcon imageIcon = new ImageIcon(getClass().getResource(
+			imageIconBombPlayer = new ImageIcon(getClass().getResource(
 					"/image/bomber_up.png"));
-			imaArr[2] = imageIcon.getImage();
+			imaArr[2] = imageIconBombPlayer.getImage();
 			g2d.drawImage(imaArr[2], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
 					null);
 		}
 		if (getOrient() == DOWN) {
-			ImageIcon imageIcon = new ImageIcon(getClass().getResource(
+			imageIconBombPlayer = new ImageIcon(getClass().getResource(
 					"/image/bomber_down.png"));
-			imaArr[3] = imageIcon.getImage();
+			imaArr[3] = imageIconBombPlayer.getImage();
 			g2d.drawImage(imaArr[3], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
 					null);
 		}
@@ -178,9 +179,9 @@ public class BombPlayer extends DadParticipate {
 	
 	public void drawDeadByCollisionWithBomb(Graphics2D g2d) {
 		if (bombPlayerIsCollisionWithBomb == true) {
-			ImageIcon imageIcon = new ImageIcon(getClass().getResource(
+			imageIconDeath = new ImageIcon(getClass().getResource(
 					"/image/bomber_dead.png"));
-			Image imgDead = imageIcon.getImage();
+			Image imgDead = imageIconDeath.getImage();
 			g2d.drawImage(imgDead, getX(), getY(), WIDTH_IMG, HEIGHT_IMG, null);
 		}
 	}

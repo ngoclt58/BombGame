@@ -11,7 +11,6 @@ import java.util.BitSet;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-import com.ngoclt.characterparticipate.ComponentMap;
 import com.ngoclt.characterparticipate.DadParticipate;
 import com.ngoclt.characterparticipate.Manager;
 
@@ -117,6 +116,7 @@ public class PlayGamePanel extends JPanel {
 				manager.moveMonster(timeGame);
 				manager.checkCollisionBombPlayerAndBomb();
 				manager.checkCollisionBombPlayerAndMonster();
+				manager.explosionBombToAnotherBomb();
 				repaint();
 			}
 		}

@@ -2,7 +2,6 @@ package com.ngoclt.characterparticipate;
 
 import java.awt.Graphics2D;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.Random;
 import com.ngoclt.guiandpanel.GUI;
 
 public class Manager {
-	private BombPlayer bombPlayer;
+	private BombPlayer bombPlayer1;
 	private ArrayList<Bomb> arrBombs;
 	private ArrayList<ComponentMap> arrComponentMaps;
 	private ArrayList<ItemSupport> arrItemSupports;
@@ -23,25 +22,33 @@ public class Manager {
 	private Random random = new Random();
 
 	public void initObjects() {
-		bombPlayer = new BombPlayer(BombPlayer.START_X, BombPlayer.START_Y, 50,
+		bombPlayer1 = new BombPlayer(BombPlayer.START_X, BombPlayer.START_Y, 50,
 				1, 5, 5);
 		arrBombs = new ArrayList<Bomb>();
 		arrItemSupports = new ArrayList<ItemSupport>();
 		arrComponentMaps = new ArrayList<ComponentMap>();
 		arrMonsters = new ArrayList<Monster>();
-		Monster monster1 = new Monster(450, 500, ComponentMap.SIZE, 0, 3);
+		Monster monster1 = new Monster(450, 550, ComponentMap.SIZE, 0, 3);
 		arrMonsters.add(monster1);
 		Monster monster2 = new Monster(250, 0, ComponentMap.SIZE, 0, 3);
 		arrMonsters.add(monster2);
-		Monster monster3 = new Monster(150, 150, ComponentMap.SIZE, 0, 3);
+		Monster monster3 = new Monster(100, 150, ComponentMap.SIZE, 0, 3);
 		arrMonsters.add(monster3);
-		Monster monster4 = new Monster(400, 400, ComponentMap.SIZE, 0, 3);
+		Monster monster4 = new Monster(450, 400, ComponentMap.SIZE, 0, 3);
 		arrMonsters.add(monster4);
-		Monster monster5 = new Monster(400, 500, ComponentMap.SIZE, 0, 3);
+		Monster monster5 = new Monster(400, 550, ComponentMap.SIZE, 0, 3);
 		arrMonsters.add(monster5);
-		Monster monster6 = new Monster(50, 400, ComponentMap.SIZE, 0, 3);
+		Monster monster6 = new Monster(0, 400, ComponentMap.SIZE, 0, 3);
 		arrMonsters.add(monster6);
-
+//		Monster monster7 = new Monster(550, 400, ComponentMap.SIZE, 0, 3);
+//		arrMonsters.add(monster7);
+//		Monster monster8 = new Monster(0, 0, ComponentMap.SIZE, 0, 3);
+//		arrMonsters.add(monster8);
+//		Monster monster9 = new Monster(200, 400, ComponentMap.SIZE, 0, 3);
+//		arrMonsters.add(monster9);
+//		Monster monster10 = new Monster(200, 300, ComponentMap.SIZE, 0, 3);
+//		arrMonsters.add(monster10);
+		
 		numCols = GUI.WIDTH / ComponentMap.SIZE;
 		numRows = GUI.HEIGHT / ComponentMap.SIZE;
 		bombPutInMap = new boolean[numRows][numCols];
@@ -52,12 +59,17 @@ public class Manager {
 		}
 	}
 
+	
+	public BombPlayer getBombPlayer1() {
+		return bombPlayer1;
+	}
+
 	public void draw(Graphics2D g2d) {
-		if (bombPlayer.getBombPlayerIsDead()) {
-			bombPlayer.drawDeadByCollisionWithBomb(g2d);
+		if (bombPlayer1.getBombPlayerIsDead()) {
+			bombPlayer1.drawDeadByCollisionWithBomb(g2d);
 		}
-		if (!bombPlayer.getBombPlayerIsDead()) {
-			bombPlayer.draw(g2d);
+		if (!bombPlayer1.getBombPlayerIsDead()) {
+			bombPlayer1.draw(g2d);
 		}
 		for (int i = 0; i < arrBombs.size(); i++) {
 			arrBombs.get(i).draw(g2d);
@@ -75,7 +87,7 @@ public class Manager {
 
 	public void moveBombPlayer(int time) {
 		for (int i = 0; i < arrComponentMaps.size(); i++) {
-			if (bombPlayer.checkCollisionWithComponentsToMove(arrComponentMaps
+			if (bombPlayer1.checkCollisionWithComponentsToMove(arrComponentMaps
 					.get(i)) && arrComponentMaps.get(i).getType() != 0) {
 				return;
 			}
@@ -83,39 +95,39 @@ public class Manager {
 		// || (bombPlayer.getY() < arrBombs
 		// .get(i).getX() + bombPlayer.HEIGHT_IMG)
 		for (int i = 0; i < arrBombs.size(); i++) {
-			if (bombPlayer.checkCollisionWithBombToMove(arrBombs.get(i))
-					&& ((bombPlayer.getX() > arrBombs.get(i).getX()
-							+ bombPlayer.WIDTH_IMG)
-							|| (bombPlayer.getX() + bombPlayer.WIDTH_IMG <= arrBombs
+			if (bombPlayer1.checkCollisionWithBombToMove(arrBombs.get(i))
+					&& ((bombPlayer1.getX() > arrBombs.get(i).getX()
+							+ bombPlayer1.WIDTH_IMG)
+							|| (bombPlayer1.getX() + bombPlayer1.WIDTH_IMG <= arrBombs
 									.get(i).getX())
-							|| (bombPlayer.getY() > arrBombs.get(i).getY()
-									+ bombPlayer.HEIGHT_IMG) || (bombPlayer
-							.getY() + bombPlayer.HEIGHT_IMG <= arrBombs.get(i)
+							|| (bombPlayer1.getY() > arrBombs.get(i).getY()
+									+ bombPlayer1.HEIGHT_IMG) || (bombPlayer1
+							.getY() + bombPlayer1.HEIGHT_IMG <= arrBombs.get(i)
 							.getY()))) {
 				return;
 			}
 		}
-		bombPlayer.move(time);
+		bombPlayer1.move(time);
 	}
 
 	public void eatItemByBombPlayer() {
 		for (int i = 0; i < arrItemSupports.size(); i++) {
-			if (bombPlayer.checkCollisionWithItem(arrItemSupports.get(i))
+			if (bombPlayer1.checkCollisionWithItem(arrItemSupports.get(i))
 					&& arrItemSupports.get(i).getType() == ItemSupport.SPEED_UP) {
-				if (bombPlayer.getMaxSpeed() == false) {
-					bombPlayer.setX(bombPlayer.getX() + bombPlayer.getSpeed());
-					bombPlayer.setSpeed(bombPlayer.getSpeed()
-							+ bombPlayer.getSpeed());
-					bombPlayer.setMaxSpeed(true);
+				if (bombPlayer1.getMaxSpeed() == false) {
+					bombPlayer1.setX(bombPlayer1.getX() + bombPlayer1.getSpeed());
+					bombPlayer1.setSpeed(bombPlayer1.getSpeed()
+							+ bombPlayer1.getSpeed());
+					bombPlayer1.setMaxSpeed(true);
 				}
 				arrItemSupports.remove(arrItemSupports.get(i));
 			}
-			if (bombPlayer.checkCollisionWithItem(arrItemSupports.get(i))
+			if (bombPlayer1.checkCollisionWithItem(arrItemSupports.get(i))
 					&& arrItemSupports.get(i).getType() == ItemSupport.BOMB_MORE) {
-				bombPlayer.setNumBombCanPut(bombPlayer.getNumBombCanPut() + 1);
+				bombPlayer1.setNumBombCanPut(bombPlayer1.getNumBombCanPut() + 1);
 				arrItemSupports.remove(arrItemSupports.get(i));
 			}
-			if (bombPlayer.checkCollisionWithItem(arrItemSupports.get(i))
+			if (bombPlayer1.checkCollisionWithItem(arrItemSupports.get(i))
 					&& arrItemSupports.get(i).getType() == ItemSupport.BOMB_POWER) {
 				arrItemSupports.remove(arrItemSupports.get(i));
 				powerBomb++;
@@ -124,10 +136,10 @@ public class Manager {
 	}
 
 	public void bombPlayerFire() {
-		if (bombPlayer.isFire()) {
-			int x = (bombPlayer.getX() + ComponentMap.SIZE / 2)
+		if (bombPlayer1.isFire()) {
+			int x = (bombPlayer1.getX() + ComponentMap.SIZE / 2)
 					/ ComponentMap.SIZE;
-			int y = (bombPlayer.getY() + ComponentMap.SIZE / 2)
+			int y = (bombPlayer1.getY() + ComponentMap.SIZE / 2)
 					/ ComponentMap.SIZE;
 			int xDraw = x * ComponentMap.SIZE;
 			int yDraw = y * ComponentMap.SIZE;
@@ -135,7 +147,7 @@ public class Manager {
 				Bomb bomb = new Bomb(xDraw, yDraw, ComponentMap.SIZE, 0, 5, 1);
 				bomb.setDamage(bomb.getDamge() + powerBomb);
 				arrBombs.add(bomb);
-				bombPlayer.setNumBombCanPut(bombPlayer.getNumBombCanPut() - 1);
+				bombPlayer1.setNumBombCanPut(bombPlayer1.getNumBombCanPut() - 1);
 				bombPutInMap[x][y] = false;
 			}
 		}
@@ -146,7 +158,7 @@ public class Manager {
 	}
 
 	public void changeOrientBombPlayer(int newOrient) {
-		bombPlayer.changeOrient(newOrient);
+		bombPlayer1.changeOrient(newOrient);
 	}
 
 	public void downTimeOutToBum(int time) {
@@ -163,8 +175,8 @@ public class Manager {
 					bombPutInMap[arrBombs.get(i).getX() / ComponentMap.SIZE][arrBombs
 							.get(i).getY() / ComponentMap.SIZE] = true;
 					arrBombs.remove(arrBombs.get(i));
-					bombPlayer
-							.setNumBombCanPut(bombPlayer.getNumBombCanPut() + 1);
+					bombPlayer1
+							.setNumBombCanPut(bombPlayer1.getNumBombCanPut() + 1);
 				}
 			}
 		}
@@ -190,6 +202,16 @@ public class Manager {
 		}
 	}
 
+	public void explosionBombToAnotherBomb() {
+		for (int i = 0; i < arrBombs.size(); i++) {
+			for (int j = i+1; j < arrBombs.size(); j++) {
+				if(arrBombs.get(i).getTimeOutToBum() <= 0 && arrBombs.get(i).checkCollisionWithAnotherBomb(arrBombs.get(j))) {
+					arrBombs.get(j).setTimeOutToBum(0);
+				}
+			}
+		}
+	}
+	
 	public void moveMonster(int time) {
 		for (int i = 0; i < arrMonsters.size(); i++) {
 			for (int j = 0; j < arrComponentMaps.size(); j++) {
@@ -202,6 +224,17 @@ public class Manager {
 				}
 			}
 		}
+		
+		for (int i = 0; i < arrMonsters.size(); i++) {
+			for (int j = 0; j < arrBombs.size(); j++) {
+				if(arrMonsters.get(i).checkCollisionWithBomb(arrBombs.get(j))) {
+					int newOrient = random.nextInt(4);
+					arrMonsters.get(i).changeOrient(newOrient);
+					return;
+				}
+			}
+		}
+		
 		for (int i = 0; i < arrMonsters.size(); i++) {
 			arrMonsters.get(i).move(time);
 			if (time % 50 == 0) {
@@ -214,18 +247,18 @@ public class Manager {
 	public void checkCollisionBombPlayerAndBomb() {
 		for (int i = 0; i < arrBombs.size(); i++) {
 			if (arrBombs.get(i).getTimeOutToBum() <= 0
-					&& arrBombs.get(i).checkCollisionWithBombPlayer(bombPlayer) == true) {
-				bombPlayer.setBombPlayerIsDead(true);
+					&& arrBombs.get(i).checkCollisionWithBombPlayer(bombPlayer1) == true) {
+				bombPlayer1.setBombPlayerIsDead(true);
 			}
 		}
 	}
 
 	public void checkCollisionBombPlayerAndMonster() {
 		for (int i = 0; i < arrMonsters.size(); i++) {
-			if (bombPlayer.checkCollisionWithMonster(arrMonsters.get(i))) {
-				bombPlayer.setBombPlayerIsCollisionWithMonster(true);
-				bombPlayer.setX(BombPlayer.START_X);
-				bombPlayer.setY(BombPlayer.START_Y);
+			if (bombPlayer1.checkCollisionWithMonster(arrMonsters.get(i))) {
+				bombPlayer1.setBombPlayerIsCollisionWithMonster(true);
+				bombPlayer1.setX(BombPlayer.START_X);
+				bombPlayer1.setY(BombPlayer.START_Y);
 			}
 		}
 

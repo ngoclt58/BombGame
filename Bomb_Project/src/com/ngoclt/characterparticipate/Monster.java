@@ -13,37 +13,37 @@ public class Monster extends DadParticipate {
 	public static final int HEIGHT_IMG = 45;
 
 	private Image imaArr[] = new Image[4];
-
+	private ImageIcon imageIconMonster;
 	public Monster(int x, int y, int size, int orient, int speed) {
 		super(x, y, size, orient, speed);
 	}
 
 	public void draw(Graphics2D g2d) {
 		if (getOrient() == LEFT) {
-			ImageIcon imageIcon = new ImageIcon(getClass().getResource(
+			imageIconMonster = new ImageIcon(getClass().getResource(
 					"/image/monster_left.png"));
-			imaArr[0] = imageIcon.getImage();
+			imaArr[0] = imageIconMonster.getImage();
 			g2d.drawImage(imaArr[0], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
 					null);
 		}
 		if (getOrient() == RIGHT) {
-			ImageIcon imageIcon = new ImageIcon(getClass().getResource(
+			imageIconMonster = new ImageIcon(getClass().getResource(
 					"/image/monster_right.png"));
-			imaArr[1] = imageIcon.getImage();
+			imaArr[1] = imageIconMonster.getImage();
 			g2d.drawImage(imaArr[1], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
 					null);
 		}
 		if (getOrient() == UP) {
-			ImageIcon imageIcon = new ImageIcon(getClass().getResource(
+			imageIconMonster = new ImageIcon(getClass().getResource(
 					"/image/monster_up.png"));
-			imaArr[2] = imageIcon.getImage();
+			imaArr[2] = imageIconMonster.getImage();
 			g2d.drawImage(imaArr[2], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
 					null);
 		}
 		if (getOrient() == DOWN) {
-			ImageIcon imageIcon = new ImageIcon(getClass().getResource(
+			imageIconMonster = new ImageIcon(getClass().getResource(
 					"/image/monster_down.png"));
-			imaArr[3] = imageIcon.getImage();
+			imaArr[3] = imageIconMonster.getImage();
 			g2d.drawImage(imaArr[3], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
 					null);
 		}
@@ -93,4 +93,28 @@ public class Monster extends DadParticipate {
 		return rectMonster.intersects(rectComp);
 	}
 
+	public boolean checkCollisionWithBomb(Bomb bomb) {
+		int newX = getX();
+		int newY = getY();
+		switch (getOrient()) {
+		case LEFT:
+			newX -= getSpeed();
+			break;
+		case RIGHT:
+			newX += getSpeed();
+			break;
+		case UP:
+			newY -= getSpeed();
+			break;
+		case DOWN:
+			newY += getSpeed();
+			break;
+		default:
+			break;
+		}
+		Rectangle rectMonster = new Rectangle(newX, newY,WIDTH_IMG,HEIGHT_IMG);
+		Rectangle rectBomb = new Rectangle(bomb.getX(), bomb.getY(),
+				bomb.WIDTH_IMG, bomb.HEIGHT_IMG);
+		return rectMonster.intersects(rectBomb);
+	}
 }
