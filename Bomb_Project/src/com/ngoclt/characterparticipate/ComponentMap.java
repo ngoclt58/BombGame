@@ -36,6 +36,9 @@ public class ComponentMap {
 	}
 	
 	public void draw(Graphics2D g2d) {
+		if (type== NOTHING) {
+			
+		}
 		if(type == BRICK) {
 			imgIcon = new ImageIcon(getClass().getResource("/image/brick.png"));
 			img1 = imgIcon.getImage();

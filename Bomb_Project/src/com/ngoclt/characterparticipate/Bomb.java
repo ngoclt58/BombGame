@@ -17,6 +17,8 @@ public class Bomb extends DadParticipate {
 	public static final int TIME_OUT_TO_BUM = 3000;
 	public static final int TIME_OUT_TO_REMOVE_BOMB = 1000;
 
+	public static final int PLAYER1_OWN_BOMB = 1;
+	public static final int PLAYER2_OWN_BOMB = 2;
 	private int timeOutToBum = TIME_OUT_TO_BUM;
 	private int timeOutToRemoveBomb = TIME_OUT_TO_REMOVE_BOMB;
 	private int damge;
@@ -24,10 +26,17 @@ public class Bomb extends DadParticipate {
 			imageIconBombHorizontal;
 	private Image imgBomb;
 	private Rectangle recBombVertical, recBombHorizontal;
+	private int playerOwnBomb;
 
-	public Bomb(int x, int y, int size, int orient, int speed, int damge) {
+	public Bomb(int x, int y, int size, int orient, int speed, int damge,
+			int playerOwnBomb) {
 		super(x, y, size, orient, speed);
 		this.damge = damge;
+		this.playerOwnBomb = playerOwnBomb;
+	}
+
+	public int getPlayerOwnBomb() {
+		return playerOwnBomb;
 	}
 
 	public void setDamage(int damage) {
@@ -41,7 +50,7 @@ public class Bomb extends DadParticipate {
 	public int getTimeOutToRemoveBomb() {
 		return timeOutToRemoveBomb;
 	}
-	
+
 	public void setTimeOutToBum(int timeOutToBum) {
 		this.timeOutToBum = timeOutToBum;
 	}
@@ -52,8 +61,14 @@ public class Bomb extends DadParticipate {
 
 	public void draw(Graphics2D g2d) {
 		if (timeOutToBum > 0) {
-			imageIconBomb = new ImageIcon(getClass().getResource(
-					"/image/bomb.png"));
+			if (playerOwnBomb == 1) {
+				imageIconBomb = new ImageIcon(getClass().getResource(
+						"/image/bomb.png"));
+			}
+			if (playerOwnBomb == 2) {
+				imageIconBomb = new ImageIcon(getClass().getResource(
+						"/image/bomb2.png"));
+			}
 			imgBomb = imageIconBomb.getImage();
 			g2d.drawImage(imgBomb, getX(), getY(), WIDTH_IMG, HEIGHT_IMG, null);
 		}
@@ -155,9 +170,9 @@ public class Bomb extends DadParticipate {
 					WIDTH_BOMBBANG, HEIGHT_IMG);
 		}
 		if (getDamge() >= 2) {
-			recBombVertical = new Rectangle(getX(), getY() - 2*HEIGHT_IMG,
+			recBombVertical = new Rectangle(getX(), getY() - 2 * HEIGHT_IMG,
 					WIDTH_IMG, HEIGHT_BOMBBANG_DAMAGE2);
-			recBombHorizontal = new Rectangle(getX() - 2*WIDTH_IMG, getY(),
+			recBombHorizontal = new Rectangle(getX() - 2 * WIDTH_IMG, getY(),
 					WIDTH_BOMBBANG_DAMAGE2, HEIGHT_IMG);
 		}
 		Rectangle recBombPlayer = new Rectangle(bombPlayer.getX(),
@@ -177,13 +192,14 @@ public class Bomb extends DadParticipate {
 					WIDTH_BOMBBANG, HEIGHT_IMG);
 		}
 		if (getDamge() >= 2) {
-			recBombVertical = new Rectangle(getX(), getY() - 2*HEIGHT_IMG,
+			recBombVertical = new Rectangle(getX(), getY() - 2 * HEIGHT_IMG,
 					WIDTH_IMG, HEIGHT_BOMBBANG_DAMAGE2);
-			recBombHorizontal = new Rectangle(getX() - 2*WIDTH_IMG, getY(),
+			recBombHorizontal = new Rectangle(getX() - 2 * WIDTH_IMG, getY(),
 					WIDTH_BOMBBANG_DAMAGE2, HEIGHT_IMG);
 		}
 		Rectangle recAnotherBomb = new Rectangle(anotherBomb.getX(),
-				anotherBomb.getY(), anotherBomb.WIDTH_IMG, anotherBomb.WIDTH_IMG);
+				anotherBomb.getY(), anotherBomb.WIDTH_IMG,
+				anotherBomb.WIDTH_IMG);
 		if (recBombHorizontal.intersects(recAnotherBomb)
 				|| recBombVertical.intersects(recAnotherBomb)) {
 			return true;

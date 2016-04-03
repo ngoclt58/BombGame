@@ -13,24 +13,44 @@ public class BombPlayer extends DadParticipate {
 	public static final int WIDTH_IMG = 45;
 	public static final int HEIGHT_IMG = 45;
 
-	public static final int START_X = 300;
-	public static final int START_Y = 300;
-	
-	public static final int TIME_OUT_TO_FIRE = 1000;
+	public static final int START_X_PLAYER1 = 300;
+	public static final int START_Y_PLAYER1 = 300;
+	public static final int START_X_PLAYER2 = 350;
+	public static final int START_Y_PLAYER2 = 350;
+
+	public static final int PLAYER1 = 1;
+	public static final int PLAYER2 = 2;
+
+	public static final int TIME_OUT_TO_DEAD = 3000;
 
 	public Image imaArr[] = new Image[4];
 	private int speedFire;
-	private int timeOut = 0;
 	private boolean maxSpeed = false;
 	private int numBombCanPut = 1;
+	private int typePlayer;
 	private boolean bombPlayerIsCollisionWithBomb = false;
 	private boolean bombPlayerIsCollisionWithMonster = false;
-	private ImageIcon imageIconBombPlayer,imageIconDeath;
-	
+	private ImageIcon imageIconBombPlayer, imageIconDeath;
+	private int timeOutToDead = TIME_OUT_TO_DEAD;
+	private int numsHeart = 3;
+
 	public BombPlayer(int x, int y, int size, int orient, int speed,
-			int speedFire) {
+			int speedFire, int typePlayer) {
 		super(x, y, size, orient, speed);
 		this.speedFire = speedFire;
+		this.typePlayer = typePlayer;
+	}
+
+	public int getNumsHeart() {
+		return numsHeart;
+	}
+
+	public void setNumsHeart(int numsHeart) {
+		this.numsHeart = numsHeart;
+	}
+
+	public int getTypePlayer() {
+		return typePlayer;
 	}
 
 	public int getSpeedFire() {
@@ -54,6 +74,10 @@ public class BombPlayer extends DadParticipate {
 		this.bombPlayerIsCollisionWithMonster = bombPlayerIsCollisionWithMonster;
 	}
 
+	public boolean getBombPlayerIsCollisionWithBomb() {
+		return bombPlayerIsCollisionWithBomb;
+	}
+
 	public boolean getBombPlayerIsDead() {
 		return bombPlayerIsCollisionWithBomb;
 	}
@@ -72,33 +96,54 @@ public class BombPlayer extends DadParticipate {
 
 	public void draw(Graphics2D g2d) {
 		if (getOrient() == LEFT) {
-			imageIconBombPlayer = new ImageIcon(getClass().getResource(
-					"/image/bomber_left.png"));
+			if (typePlayer == PLAYER1) {
+				imageIconBombPlayer = new ImageIcon(getClass().getResource(
+						"/image/bomber_left.png"));
+			} else {
+				imageIconBombPlayer = new ImageIcon(getClass().getResource(
+						"/image/bombplayer2_left.png"));
+			}
 			imaArr[0] = imageIconBombPlayer.getImage();
 			g2d.drawImage(imaArr[0], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
 					null);
 		}
 		if (getOrient() == RIGHT) {
-			imageIconBombPlayer = new ImageIcon(getClass().getResource(
-					"/image/bomber_right.png"));
+			if (typePlayer == PLAYER1) {
+				imageIconBombPlayer = new ImageIcon(getClass().getResource(
+						"/image/bomber_right.png"));
+			} else {
+				imageIconBombPlayer = new ImageIcon(getClass().getResource(
+						"/image/bombplayer2_right.png"));
+			}
 			imaArr[1] = imageIconBombPlayer.getImage();
 			g2d.drawImage(imaArr[1], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
 					null);
 		}
 		if (getOrient() == UP) {
-			imageIconBombPlayer = new ImageIcon(getClass().getResource(
-					"/image/bomber_up.png"));
+			if (typePlayer == PLAYER1) {
+				imageIconBombPlayer = new ImageIcon(getClass().getResource(
+						"/image/bomber_up.png"));
+			} else {
+				imageIconBombPlayer = new ImageIcon(getClass().getResource(
+						"/image/bombplayer2_up.png"));
+			}
 			imaArr[2] = imageIconBombPlayer.getImage();
 			g2d.drawImage(imaArr[2], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
 					null);
 		}
 		if (getOrient() == DOWN) {
-			imageIconBombPlayer = new ImageIcon(getClass().getResource(
-					"/image/bomber_down.png"));
+			if (typePlayer == PLAYER1) {
+				imageIconBombPlayer = new ImageIcon(getClass().getResource(
+						"/image/bomber_down.png"));
+			} else {
+				imageIconBombPlayer = new ImageIcon(getClass().getResource(
+						"/image/bombplayer2_down.png"));
+			}
 			imaArr[3] = imageIconBombPlayer.getImage();
 			g2d.drawImage(imaArr[3], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
 					null);
 		}
+
 	}
 
 	public void move(int time) {
@@ -117,7 +162,7 @@ public class BombPlayer extends DadParticipate {
 	}
 
 	public boolean isFire() {
-		if (timeOut <= 0 && numBombCanPut > 0) {
+		if (numBombCanPut > 0) {
 			return true;
 		} else
 			return false;
@@ -125,6 +170,23 @@ public class BombPlayer extends DadParticipate {
 
 	public void changeOrient(int newOrient) {
 		setOrient(newOrient);
+	}
+
+	public void setTimeOutToDead(int time) {
+		timeOutToDead -= time;
+		if (timeOutToDead <= 0) {
+			timeOutToDead = TIME_OUT_TO_DEAD;
+			if (typePlayer == 1) {
+				setX(START_X_PLAYER1);
+				setY(START_Y_PLAYER1);
+			}
+			if (typePlayer == 2) {
+				setX(START_X_PLAYER2);
+				setY(START_Y_PLAYER2);
+			}
+			bombPlayerIsCollisionWithBomb = false;
+			numsHeart--;
+		}
 	}
 
 	public boolean checkCollisionWithComponentsToMove(ComponentMap comp) {
@@ -172,11 +234,11 @@ public class BombPlayer extends DadParticipate {
 			break;
 		}
 		Rectangle rectBomer = new Rectangle(newX, newY, WIDTH_IMG, HEIGHT_IMG);
-		Rectangle rectBomb = new Rectangle(bomb.getX(), bomb.getY(), bomb.WIDTH_IMG,
-				bomb.HEIGHT_IMG);
+		Rectangle rectBomb = new Rectangle(bomb.getX(), bomb.getY(),
+				bomb.WIDTH_IMG, bomb.HEIGHT_IMG);
 		return rectBomer.intersects(rectBomb);
 	}
-	
+
 	public void drawDeadByCollisionWithBomb(Graphics2D g2d) {
 		if (bombPlayerIsCollisionWithBomb == true) {
 			imageIconDeath = new ImageIcon(getClass().getResource(
@@ -185,9 +247,9 @@ public class BombPlayer extends DadParticipate {
 			g2d.drawImage(imgDead, getX(), getY(), WIDTH_IMG, HEIGHT_IMG, null);
 		}
 	}
-	
+
 	public void drawDeadByCollisionWithMonster(Graphics2D g2d) {
-		if(bombPlayerIsCollisionWithMonster == true) {
+		if (bombPlayerIsCollisionWithMonster == true) {
 			ImageIcon imageIcon = new ImageIcon(getClass().getResource(
 					"/image/ghost.png"));
 			Image imgGhost = imageIcon.getImage();
