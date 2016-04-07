@@ -8,11 +8,11 @@ public class DadParticipate {
 	public static final int UP = 2;
 	public static final int DOWN = 3;
 
-	private int x, y;
-	private int size;
-	private int orient;
-	private int speed;
-	private Image img;
+	protected int x, y;
+	protected int size;
+	protected int orient;
+	protected int speed;
+	protected Image img;
 
 	public DadParticipate(int x, int y, int size, int orient, int speed) {
 		this.x = x;

@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import com.ngoclt.playsound.Sound;
 
@@ -50,6 +51,31 @@ public class GUI extends JFrame {
 				GUI.this.add(playGamePanel);
 				playGamePanel.setVisible(true);
 				playGamePanel.requestFocusInWindow();
+			}
+		});
+
+		menuPanel.getBtIntroduction().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"Player 1 dùng các phím lên, xuống , trái , phải để điều khiển và phím 0 để đặt bomb"
+										+ "\n"
+										+ "Player 2 dùng các phím a, w, s, d để điều khiển và phím space để đặt bomb"
+										+ "\n"
+										+ "Chúc các bạn trẻ chơi game vui vẻ! ");
+			}
+		});
+
+		menuPanel.getBtAuthor().addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Author: Lê Thanh Ngọc"
+						+ "\n"
+						+ "Trường: Đại học Công Nghệ- Đại học Quốc gia Hà Nội"
+						+ "\n" + "Email: ngoclt_58@vnu.edu.vn");
 			}
 		});
 	}

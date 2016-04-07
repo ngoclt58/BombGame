@@ -15,6 +15,8 @@ public class Manager {
 	private ArrayList<ComponentMap> arrComponentMaps;
 	private ArrayList<ItemSupport> arrItemSupports;
 	private ArrayList<Monster> arrMonsters;
+	private ArrayList<Boss> arrBoss;
+	private ArrayList<BombOfBoss> arrBombOfBosses;
 	private RandomAccessFile randomAccessFile;
 	private boolean[][] bombPutInMap;
 	private int numRows, numCols;
@@ -22,23 +24,25 @@ public class Manager {
 	private Random random = new Random();
 	private boolean bombPlayer2isAppear = true;
 	private int numberPlayers;
+	private int timeCondition = 0;
 
 	public Manager(int numberPlayers) {
 		this.numberPlayers = numberPlayers;
 	}
 
 	public void initObjects() {
-		bombPlayer1 = new BombPlayer(bombPlayer1.START_X_PLAYER1,
-				bombPlayer1.START_Y_PLAYER1, 50, 1, 5, 5, BombPlayer.PLAYER1);
+		bombPlayer1 = new BombPlayer(BombPlayer.START_X_PLAYER1,
+				BombPlayer.START_Y_PLAYER1, 50, 0, 5, 5, BombPlayer.PLAYER1);
 		if (numberPlayers == 2) {
-			bombPlayer2 = new BombPlayer(bombPlayer2.START_X_PLAYER2,
-					bombPlayer2.START_Y_PLAYER2, 50, 1, 5, 5,
-					BombPlayer.PLAYER2);
+			bombPlayer2 = new BombPlayer(BombPlayer.START_X_PLAYER2,
+					BombPlayer.START_Y_PLAYER2, 50, 1, 5, 5, BombPlayer.PLAYER2);
 		}
 		arrBombs = new ArrayList<Bomb>();
 		arrItemSupports = new ArrayList<ItemSupport>();
 		arrComponentMaps = new ArrayList<ComponentMap>();
 		arrMonsters = new ArrayList<Monster>();
+		arrBombOfBosses = new ArrayList<BombOfBoss>();
+		arrBoss = new ArrayList<Boss>();
 		Monster monster1 = new Monster(450, 550, ComponentMap.SIZE, 0, 3);
 		arrMonsters.add(monster1);
 		Monster monster2 = new Monster(250, 0, ComponentMap.SIZE, 0, 3);
@@ -51,6 +55,14 @@ public class Manager {
 		arrMonsters.add(monster5);
 		Monster monster6 = new Monster(0, 400, ComponentMap.SIZE, 0, 3);
 		arrMonsters.add(monster6);
+		Boss boss3 = new Boss(600, 300, 50, 0, 5);
+		arrBoss.add(boss3);
+		Boss boss2 = new Boss(0, 300, 50, 1, 5);
+		arrBoss.add(boss2);
+		Boss boss4 = new Boss(275, 600, 50, 2, 5);
+		arrBoss.add(boss4);
+		Boss boss1 = new Boss(275, 0, 50, 3, 5);
+		arrBoss.add(boss1);
 		// Monster monster7 = new Monster(550, 400, ComponentMap.SIZE, 0, 3);
 		// arrMonsters.add(monster7);
 		// Monster monster8 = new Monster(0, 0, ComponentMap.SIZE, 0, 3);
@@ -117,6 +129,12 @@ public class Manager {
 		for (int i = 0; i < arrMonsters.size(); i++) {
 			arrMonsters.get(i).draw(g2d);
 		}
+		for (int i = 0; i < arrBoss.size(); i++) {
+			arrBoss.get(i).draw(g2d);
+		}
+		for (int i = 0; i < arrBombOfBosses.size(); i++) {
+			arrBombOfBosses.get(i).draw(g2d);
+		}
 	}
 
 	public void moveBombPlayer1(int time) {
@@ -126,15 +144,22 @@ public class Manager {
 				return;
 			}
 		}
+
+		for (int i = 0; i < arrBoss.size(); i++) {
+			if (bombPlayer1.checkCollisionWithBossToMove(arrBoss.get(i))) {
+				return;
+			}
+		}
+
 		for (int i = 0; i < arrBombs.size(); i++) {
 			if (bombPlayer1.checkCollisionWithBombToMove(arrBombs.get(i))
 					&& ((bombPlayer1.getX() >= arrBombs.get(i).getX()
-							+ bombPlayer1.WIDTH_IMG)
-							|| (bombPlayer1.getX() + bombPlayer1.WIDTH_IMG <= arrBombs
+							+ BombPlayer.WIDTH_IMG)
+							|| (bombPlayer1.getX() + BombPlayer.WIDTH_IMG <= arrBombs
 									.get(i).getX())
 							|| (bombPlayer1.getY() >= arrBombs.get(i).getY()
-									+ bombPlayer1.HEIGHT_IMG) || (bombPlayer1
-							.getY() + bombPlayer1.HEIGHT_IMG <= arrBombs.get(i)
+									+ BombPlayer.HEIGHT_IMG) || (bombPlayer1
+							.getY() + BombPlayer.HEIGHT_IMG <= arrBombs.get(i)
 							.getY()))) {
 				return;
 			}
@@ -149,15 +174,22 @@ public class Manager {
 				return;
 			}
 		}
+
+		for (int i = 0; i < arrBoss.size(); i++) {
+			if (bombPlayer2.checkCollisionWithBossToMove(arrBoss.get(i))) {
+				return;
+			}
+		}
+
 		for (int i = 0; i < arrBombs.size(); i++) {
 			if (bombPlayer2.checkCollisionWithBombToMove(arrBombs.get(i))
 					&& ((bombPlayer2.getX() >= arrBombs.get(i).getX()
-							+ bombPlayer2.WIDTH_IMG)
-							|| (bombPlayer2.getX() + bombPlayer2.WIDTH_IMG <= arrBombs
+							+ BombPlayer.WIDTH_IMG)
+							|| (bombPlayer2.getX() + BombPlayer.WIDTH_IMG <= arrBombs
 									.get(i).getX())
 							|| (bombPlayer2.getY() >= arrBombs.get(i).getY()
-									+ bombPlayer2.HEIGHT_IMG) || (bombPlayer2
-							.getY() + bombPlayer2.HEIGHT_IMG <= arrBombs.get(i)
+									+ BombPlayer.HEIGHT_IMG) || (bombPlayer2
+							.getY() + BombPlayer.HEIGHT_IMG <= arrBombs.get(i)
 							.getY()))) {
 				return;
 			}
@@ -228,7 +260,7 @@ public class Manager {
 			int xDraw = x * ComponentMap.SIZE;
 			int yDraw = y * ComponentMap.SIZE;
 			if (bombPutInMap[x][y]) {
-				Bomb bomb = new Bomb(xDraw, yDraw, ComponentMap.SIZE, 0, 5, 1,
+				Bomb bomb = new Bomb(xDraw, yDraw, ComponentMap.SIZE, 0, 1,
 						Bomb.PLAYER1_OWN_BOMB);
 				bomb.setDamage(bomb.getDamge() + powerBomb);
 				arrBombs.add(bomb);
@@ -248,7 +280,7 @@ public class Manager {
 			int xDraw = x * ComponentMap.SIZE;
 			int yDraw = y * ComponentMap.SIZE;
 			if (bombPutInMap[x][y]) {
-				Bomb bomb = new Bomb(xDraw, yDraw, ComponentMap.SIZE, 0, 5, 1,
+				Bomb bomb = new Bomb(xDraw, yDraw, ComponentMap.SIZE, 0, 1,
 						Bomb.PLAYER2_OWN_BOMB);
 				bomb.setDamage(bomb.getDamge() + powerBomb);
 				arrBombs.add(bomb);
@@ -257,10 +289,6 @@ public class Manager {
 				bombPutInMap[x][y] = false;
 			}
 		}
-	}
-
-	public void bombPlayerIsDead() {
-
 	}
 
 	public void changeOrientBombPlayer1(int newOrient) {
@@ -275,9 +303,22 @@ public class Manager {
 		for (int i = 0; i < arrBombs.size(); i++) {
 			arrBombs.get(i).downTimeOutToBum(time);
 		}
+		for (int i = 0; i < arrBombOfBosses.size(); i++) {
+			arrBombOfBosses.get(i).downTimeOutToBum(time);
+		}
 	}
 
-	/* */
+	public void downTimeOutToRemoveBombOfBoss(int time) {
+		for (int i = 0; i < arrBombOfBosses.size(); i++) {
+			if (arrBombOfBosses.get(i).removeBomb()) {
+				arrBombOfBosses.get(i).downTimeOutToRemoveBomb(time);
+				if (arrBombOfBosses.get(i).getTimeOutToRemoveBomb() <= 0) {
+					arrBombOfBosses.remove(arrBombOfBosses.get(i));
+				}
+			}
+		}
+	}
+
 	public void downTimeOutToRemoveBombPlayer1(int time) {
 		for (int i = 0; i < arrBombs.size(); i++) {
 			if (arrBombs.get(i).removeBomb()
@@ -311,6 +352,18 @@ public class Manager {
 		}
 	}
 
+	public void removeBossAfterBombBang() {
+		for (int i = 0; i < arrBombs.size(); i++) {
+			for (int j = 0; j < arrBoss.size(); j++) {
+				if (arrBombs.get(i).getTimeOutToBum() <= 0
+						&& arrBombs.get(i).checkCollisionWithBoss(
+								arrBoss.get(j)) == true) {
+					arrBoss.get(j).setAlive(false);
+				}
+			}
+		}
+	}
+
 	public void removeComponentsAndMonsterAfterBombBang() {
 		for (int i = 0; i < arrBombs.size(); i++) {
 			for (int j = 0; j < arrComponentMaps.size(); j++) {
@@ -326,6 +379,20 @@ public class Manager {
 						&& arrBombs.get(i).checkCollisionWithMonster(
 								arrMonsters.get(j)) == true) {
 					arrMonsters.remove(arrMonsters.get(j));
+				}
+			}
+		}
+	}
+
+	public void removeComponentsAfterBombOfBossBang() {
+		for (int i = 0; i < arrBombOfBosses.size(); i++) {
+			for (int j = 0; j < arrComponentMaps.size(); j++) {
+				if (arrBombOfBosses.get(i).getTimeOutToBum() <= 0
+						&& arrBombOfBosses.get(i)
+								.checkCollisionAfterBombBangWithComponents(
+										arrComponentMaps.get(j)) == true
+						&& arrComponentMaps.get(j).getType() != 1) {
+					arrComponentMaps.remove(arrComponentMaps.get(j));
 				}
 			}
 		}
@@ -384,7 +451,27 @@ public class Manager {
 			}
 		}
 	}
-	
+
+	public void checkCollisionBombPlayer1AndBombOfBoss() {
+		for (int i = 0; i < arrBombOfBosses.size(); i++) {
+			if (arrBombOfBosses.get(i).getTimeOutToBum() <= 0
+					&& arrBombOfBosses.get(i).checkCollisionWithBombPlayer(
+							bombPlayer1) == true) {
+				bombPlayer1.setBombPlayerIsDead(true);
+			}
+		}
+	}
+
+	public void checkCollisionBombPlayer2AndBombOfBoss() {
+		for (int i = 0; i < arrBombOfBosses.size(); i++) {
+			if (arrBombOfBosses.get(i).getTimeOutToBum() <= 0
+					&& arrBombOfBosses.get(i).checkCollisionWithBombPlayer(
+							bombPlayer2) == true) {
+				bombPlayer2.setBombPlayerIsDead(true);
+			}
+		}
+	}
+
 	public void setTimeOutToPlayer1Dead(int time) {
 		bombPlayer1.setTimeOutToDead(time);
 	}
@@ -392,7 +479,7 @@ public class Manager {
 	public void setTimeOutToPlayer2Dead(int time) {
 		bombPlayer2.setTimeOutToDead(time);
 	}
-	
+
 	public void checkCollisionBombPlayer2AndBomb() {
 		for (int i = 0; i < arrBombs.size(); i++) {
 			if (arrBombs.get(i).getTimeOutToBum() <= 0
@@ -422,7 +509,7 @@ public class Manager {
 	public int getNumberHeartPlayer2() {
 		return bombPlayer2.getNumsHeart();
 	}
-	
+
 	public void checkCollisionBombPlayer2AndMonster() {
 		for (int i = 0; i < arrMonsters.size(); i++) {
 			if (bombPlayer2.checkCollisionWithMonster(arrMonsters.get(i))) {
@@ -434,6 +521,65 @@ public class Manager {
 		}
 	}
 
+	public void createBombOfBoss(int time) {
+		if (time > timeCondition) {
+			int i = (time % Boss.NUMBER_OF_BOSS);
+			if (arrBoss.get(i).isAlive()) {
+				if (i == 0) {
+					BombOfBoss bomOfBoss = new BombOfBoss(
+							arrBoss.get(i).getX(), arrBoss.get(i).getY() + 50,
+							BombOfBoss.getSizeBomb(), i, 5);
+					arrBombOfBosses.add(bomOfBoss);
+				}
+				if (i == 1) {
+					BombOfBoss bomOfBoss = new BombOfBoss(
+							arrBoss.get(i).getX() + 100,
+							arrBoss.get(i).getY() + 50,
+							BombOfBoss.getSizeBomb(), i, 5);
+					arrBombOfBosses.add(bomOfBoss);
+				}
+				if (i == 2) {
+					BombOfBoss bomOfBoss = new BombOfBoss(
+							arrBoss.get(i).getX() + 25,
+							arrBoss.get(i).getY() - 25,
+							BombOfBoss.getSizeBomb(), i, 5);
+					arrBombOfBosses.add(bomOfBoss);
+				}
+				if (i == 3) {
+					BombOfBoss bomOfBoss = new BombOfBoss(
+							arrBoss.get(i).getX() + 25,
+							arrBoss.get(i).getY() + 100,
+							BombOfBoss.getSizeBomb(), i, 5);
+					arrBombOfBosses.add(bomOfBoss);
+				}
+			}
+			timeCondition += BombOfBoss.getTimeOutToCreateBomb();
+		}
+	}
+
+	public void moveBombOfBoss() {
+		for (int i = 0; i < arrBombOfBosses.size(); i++) {
+			for (int j = 0; j < arrComponentMaps.size(); j++) {
+				if (arrBombOfBosses.get(i).checkCollisionWithComponents(
+						arrComponentMaps.get(j))
+						&& arrComponentMaps.get(j).getType() != 0) {
+					arrBombOfBosses.get(i).setCanMove(false);
+				}
+			}
+		}
+		for (int i = 0; i < arrBombOfBosses.size(); i++) {
+			arrBombOfBosses.get(i).move();
+		}
+	}
+
+	public void setLocationForBossAfterDead() {
+		for (int i = 0; i < arrBoss.size(); i++) {
+			if(!arrBoss.get(i).isAlive()) {
+				arrBoss.get(i).setLocationForBossAfterDead();
+			}
+		}
+	}
+	
 	public void readFileToCreateMap(String path) {
 		File file = new File(getClass().getResource(path).getPath());
 		try {

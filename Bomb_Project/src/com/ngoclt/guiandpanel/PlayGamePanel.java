@@ -244,11 +244,14 @@ public class PlayGamePanel extends JPanel {
 				timeGame++;
 				manager.downTimeOutToBum(50);
 				manager.downTimeOutToRemoveBombPlayer1(50);
+				manager.downTimeOutToRemoveBombOfBoss(50);
 				manager.removeComponentsAndMonsterAfterBombBang();
 				manager.eatItemByBombPlayer1();
 				manager.moveMonster(timeGame);
 				manager.checkCollisionBombPlayer1AndBomb();
 				manager.checkCollisionBombPlayer1AndMonster();
+				manager.checkCollisionBombPlayer1AndBombOfBoss();
+				manager.removeBossAfterBombBang();
 				if(manager.getBombPlayer1().getBombPlayerIsCollisionWithBomb()) {
 					manager.setTimeOutToPlayer1Dead(50);
 				}
@@ -261,6 +264,7 @@ public class PlayGamePanel extends JPanel {
 					manager.downTimeOutToRemoveBombPlayer2(50);
 					manager.eatItemByBombPlayer2();
 					manager.checkCollisionBombPlayer2AndBomb();
+					manager.checkCollisionBombPlayer2AndBombOfBoss();
 					labelNumHeartPlayer2.setText("x "
 							+ manager.getBombPlayer2().getNumsHeart());
 					if(manager.getBombPlayer2().getBombPlayerIsCollisionWithBomb()) {
@@ -271,6 +275,10 @@ public class PlayGamePanel extends JPanel {
 					}
 				}
 				manager.explosionBombToAnotherBomb();
+				manager.createBombOfBoss(timeGame);
+				manager.moveBombOfBoss();
+				manager.removeComponentsAfterBombOfBossBang();
+				manager.setLocationForBossAfterDead();
 				repaint();
 				labelNumHeartPlayer1.setText("x "
 						+ manager.getBombPlayer1().getNumsHeart());

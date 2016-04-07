@@ -14,7 +14,7 @@ public class MenuPanel extends JPanel{
 	private Font font = new Font("Tahoma", Font.BOLD | Font.ITALIC, 30);
 	private JLabel labelBackGround;
 	private ImageIcon imgBackGround;
-	private JButton btPlay1, btPlay2;
+	private JButton btPlay1, btPlay2, btIntroduction, btAuthor;
 
 	public MenuPanel() {
 		initMenuPanel();
@@ -30,9 +30,19 @@ public class MenuPanel extends JPanel{
 		return btPlay2;
 	}
 	
+	public JButton getBtIntroduction() {
+		return btIntroduction;
+	}
+
+	public JButton getBtAuthor() {
+		return btAuthor;
+	}
+	
 	private void addComps() {
 		add(btPlay1);
 		add(btPlay2);
+		add(btIntroduction);
+		add(btAuthor);
 		add(labelBackGround);
 	}
 
@@ -46,14 +56,25 @@ public class MenuPanel extends JPanel{
 		btPlay1.setBackground(Color.RED);
 		btPlay1.setFont(font);
 		btPlay1.setForeground(Color.YELLOW);
-		btPlay1.setBounds(600, 300, 200, 40);
+		btPlay1.setBounds(600, 300, 250, 40);
 		
 		btPlay2 = new JButton("2 player ");
 		btPlay2.setBackground(Color.RED);
 		btPlay2.setFont(font);
 		btPlay2.setForeground(Color.YELLOW);
-		btPlay2.setBounds(600, 370, 200, 40);
+		btPlay2.setBounds(600, 370, 250, 40);
 		
+		btIntroduction = new JButton("Introduction ");
+		btIntroduction.setBackground(Color.RED);
+		btIntroduction.setFont(font);
+		btIntroduction.setForeground(Color.YELLOW);
+		btIntroduction.setBounds(600, 440, 250, 40);
+		
+		btAuthor = new JButton("Author ");
+		btAuthor.setBackground(Color.RED);
+		btAuthor.setFont(font);
+		btAuthor.setForeground(Color.YELLOW);
+		btAuthor.setBounds(600, 510, 250, 40);
 	}
 
 	private void initMenuPanel() {

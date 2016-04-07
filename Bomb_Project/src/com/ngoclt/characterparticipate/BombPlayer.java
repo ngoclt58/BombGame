@@ -12,11 +12,13 @@ public class BombPlayer extends DadParticipate {
 
 	public static final int WIDTH_IMG = 45;
 	public static final int HEIGHT_IMG = 45;
-
-	public static final int START_X_PLAYER1 = 300;
-	public static final int START_Y_PLAYER1 = 300;
-	public static final int START_X_PLAYER2 = 350;
-	public static final int START_Y_PLAYER2 = 350;
+	public static final int WIDTH_CHARACTER = 45;
+	public static final int HEIGHT_CHARACTER = 65;
+	
+	public static final int START_X_PLAYER1 = 650;
+	public static final int START_Y_PLAYER1 = 0;
+	public static final int START_X_PLAYER2 = 0;
+	public static final int START_Y_PLAYER2 = 0;
 
 	public static final int PLAYER1 = 1;
 	public static final int PLAYER2 = 2;
@@ -24,7 +26,6 @@ public class BombPlayer extends DadParticipate {
 	public static final int TIME_OUT_TO_DEAD = 3000;
 
 	public Image imaArr[] = new Image[4];
-	private int speedFire;
 	private boolean maxSpeed = false;
 	private int numBombCanPut = 1;
 	private int typePlayer;
@@ -37,8 +38,43 @@ public class BombPlayer extends DadParticipate {
 	public BombPlayer(int x, int y, int size, int orient, int speed,
 			int speedFire, int typePlayer) {
 		super(x, y, size, orient, speed);
-		this.speedFire = speedFire;
 		this.typePlayer = typePlayer;
+	}
+
+	public static int getWidthImg() {
+		return WIDTH_IMG;
+	}
+
+	public static int getHeightImg() {
+		return HEIGHT_IMG;
+	}
+
+	public static int getStartXPlayer1() {
+		return START_X_PLAYER1;
+	}
+
+	public static int getStartYPlayer1() {
+		return START_Y_PLAYER1;
+	}
+
+	public static int getStartXPlayer2() {
+		return START_X_PLAYER2;
+	}
+
+	public static int getStartYPlayer2() {
+		return START_Y_PLAYER2;
+	}
+
+	public boolean isBombPlayerIsCollisionWithMonster() {
+		return bombPlayerIsCollisionWithMonster;
+	}
+
+	public ImageIcon getImageIconBombPlayer() {
+		return imageIconBombPlayer;
+	}
+
+	public ImageIcon getImageIconDeath() {
+		return imageIconDeath;
 	}
 
 	public int getNumsHeart() {
@@ -53,20 +89,12 @@ public class BombPlayer extends DadParticipate {
 		return typePlayer;
 	}
 
-	public int getSpeedFire() {
-		return speedFire;
-	}
-
 	public boolean getMaxSpeed() {
 		return maxSpeed;
 	}
 
 	public int getNumBombCanPut() {
 		return numBombCanPut;
-	}
-
-	public boolean getbombPlayerIsCollisionWithMonster() {
-		return bombPlayerIsCollisionWithMonster;
 	}
 
 	public void setBombPlayerIsCollisionWithMonster(
@@ -104,7 +132,7 @@ public class BombPlayer extends DadParticipate {
 						"/image/bombplayer2_left.png"));
 			}
 			imaArr[0] = imageIconBombPlayer.getImage();
-			g2d.drawImage(imaArr[0], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
+			g2d.drawImage(imaArr[0], getX(), getY(), WIDTH_CHARACTER, HEIGHT_CHARACTER,
 					null);
 		}
 		if (getOrient() == RIGHT) {
@@ -116,7 +144,7 @@ public class BombPlayer extends DadParticipate {
 						"/image/bombplayer2_right.png"));
 			}
 			imaArr[1] = imageIconBombPlayer.getImage();
-			g2d.drawImage(imaArr[1], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
+			g2d.drawImage(imaArr[1], getX(), getY(), WIDTH_CHARACTER, HEIGHT_CHARACTER,
 					null);
 		}
 		if (getOrient() == UP) {
@@ -128,7 +156,7 @@ public class BombPlayer extends DadParticipate {
 						"/image/bombplayer2_up.png"));
 			}
 			imaArr[2] = imageIconBombPlayer.getImage();
-			g2d.drawImage(imaArr[2], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
+			g2d.drawImage(imaArr[2], getX(), getY(), WIDTH_CHARACTER, HEIGHT_CHARACTER,
 					null);
 		}
 		if (getOrient() == DOWN) {
@@ -140,7 +168,7 @@ public class BombPlayer extends DadParticipate {
 						"/image/bombplayer2_down.png"));
 			}
 			imaArr[3] = imageIconBombPlayer.getImage();
-			g2d.drawImage(imaArr[3], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
+			g2d.drawImage(imaArr[3], getX(), getY(), WIDTH_CHARACTER, HEIGHT_CHARACTER,
 					null);
 		}
 
@@ -209,11 +237,36 @@ public class BombPlayer extends DadParticipate {
 			break;
 		}
 		Rectangle rectBomer = new Rectangle(newX, newY, WIDTH_IMG, HEIGHT_IMG);
-		Rectangle rectComp = new Rectangle(comp.getX(), comp.getY(), comp.SIZE,
-				comp.SIZE);
+		Rectangle rectComp = new Rectangle(comp.getX(), comp.getY(), ComponentMap.getSize(),
+				ComponentMap.getSize());
 		return rectBomer.intersects(rectComp);
 	}
 
+	public boolean checkCollisionWithBossToMove(Boss boss) {
+		int newX = getX();
+		int newY = getY();
+		switch (getOrient()) {
+		case LEFT:
+			newX -= getSpeed();
+			break;
+		case RIGHT:
+			newX += getSpeed();
+			break;
+		case UP:
+			newY -= getSpeed();
+			break;
+		case DOWN:
+			newY += getSpeed();
+			break;
+		default:
+			break;
+		}
+		Rectangle rectBomer = new Rectangle(newX, newY, WIDTH_IMG, HEIGHT_IMG);
+		Rectangle recBoss = new Rectangle(boss.getX(), boss.getY(), Boss.getWidthImg(),
+				Boss.getHeightImg());
+		return rectBomer.intersects(recBoss);
+	}
+	
 	public boolean checkCollisionWithBombToMove(Bomb bomb) {
 		int newX = getX();
 		int newY = getY();
@@ -235,7 +288,7 @@ public class BombPlayer extends DadParticipate {
 		}
 		Rectangle rectBomer = new Rectangle(newX, newY, WIDTH_IMG, HEIGHT_IMG);
 		Rectangle rectBomb = new Rectangle(bomb.getX(), bomb.getY(),
-				bomb.WIDTH_IMG, bomb.HEIGHT_IMG);
+				Bomb.getWidthImg(), Bomb.getHeightImg());
 		return rectBomer.intersects(rectBomb);
 	}
 
@@ -260,8 +313,8 @@ public class BombPlayer extends DadParticipate {
 	public boolean checkCollisionWithItem(ItemSupport item) {
 		Rectangle rectBomer = new Rectangle(getX(), getY(), WIDTH_IMG,
 				HEIGHT_IMG);
-		Rectangle rectItem = new Rectangle(item.getX(), item.getY(), item.SIZE,
-				item.SIZE);
+		Rectangle rectItem = new Rectangle(item.getX(), item.getY(), ComponentMap.getSize(),
+				ComponentMap.getSize());
 		return rectBomer.intersects(rectItem);
 	}
 
@@ -269,7 +322,7 @@ public class BombPlayer extends DadParticipate {
 		Rectangle rectBomer = new Rectangle(getX(), getY(), WIDTH_IMG,
 				HEIGHT_IMG);
 		Rectangle rectMonster = new Rectangle(monster.getX(), monster.getY(),
-				monster.WIDTH_IMG, monster.HEIGHT_IMG);
+				Monster.getWidthImg(), Monster.getHeightImg());
 		return rectBomer.intersects(rectMonster);
 	}
 }

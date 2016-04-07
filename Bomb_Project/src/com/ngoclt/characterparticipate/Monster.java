@@ -9,13 +9,25 @@ import javax.swing.ImageIcon;
 import com.ngoclt.guiandpanel.GUI;
 
 public class Monster extends DadParticipate {
+	public static final int WIDTH = 75;
+	public static final int HEIGHT = 59;
+	
 	public static final int WIDTH_IMG = 45;
 	public static final int HEIGHT_IMG = 45;
-
+	
 	private Image imaArr[] = new Image[4];
 	private ImageIcon imageIconMonster;
+
 	public Monster(int x, int y, int size, int orient, int speed) {
 		super(x, y, size, orient, speed);
+	}
+
+	public static int getWidthImg() {
+		return WIDTH_IMG;
+	}
+
+	public static int getHeightImg() {
+		return HEIGHT_IMG;
 	}
 
 	public void draw(Graphics2D g2d) {
@@ -47,6 +59,7 @@ public class Monster extends DadParticipate {
 			g2d.drawImage(imaArr[3], getX(), getY(), WIDTH_IMG, HEIGHT_IMG,
 					null);
 		}
+		
 	}
 
 	public void changeOrient(int newOrient) {
@@ -87,9 +100,9 @@ public class Monster extends DadParticipate {
 		default:
 			break;
 		}
-		Rectangle rectMonster = new Rectangle(newX, newY,WIDTH_IMG,HEIGHT_IMG);
+		Rectangle rectMonster = new Rectangle(newX, newY, WIDTH_IMG, HEIGHT_IMG);
 		Rectangle rectComp = new Rectangle(comp.getX(), comp.getY(),
-				comp.SIZE, comp.SIZE);
+				ComponentMap.getSize(), ComponentMap.getSize());
 		return rectMonster.intersects(rectComp);
 	}
 
@@ -112,9 +125,9 @@ public class Monster extends DadParticipate {
 		default:
 			break;
 		}
-		Rectangle rectMonster = new Rectangle(newX, newY,WIDTH_IMG,HEIGHT_IMG);
+		Rectangle rectMonster = new Rectangle(newX, newY, WIDTH_IMG, HEIGHT_IMG);
 		Rectangle rectBomb = new Rectangle(bomb.getX(), bomb.getY(),
-				bomb.WIDTH_IMG, bomb.HEIGHT_IMG);
+				Bomb.getWidthImg(), Bomb.getHeightImg());
 		return rectMonster.intersects(rectBomb);
 	}
 }
