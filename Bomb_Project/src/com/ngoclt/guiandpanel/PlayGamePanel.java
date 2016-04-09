@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.ngoclt.characterparticipate.BombPlayer;
 import com.ngoclt.characterparticipate.DadParticipate;
 import com.ngoclt.characterparticipate.Manager;
 
@@ -24,7 +25,8 @@ public class PlayGamePanel extends JPanel {
 	private Font font = new Font("Tahoma", Font.BOLD, 20);
 	private JLabel labelMenuPlayer1, labelMenuPlayer2, labelImgPlayer1,
 			labelImgPlayer2, labelPlayer1, labelPlayer2, labelImgHeartPlayer1,
-			labelImgHeartPlayer2, labelNumHeartPlayer1, labelNumHeartPlayer2, labelPlayer1GameOver, labelPlayer2GameOver;
+			labelImgHeartPlayer2, labelNumHeartPlayer1, labelNumHeartPlayer2,
+			labelPlayer1GameOver, labelPlayer2GameOver;
 	private ImageIcon imgMenuPlayer, imgPlayer1, imgPlayer2, imgHeart;
 	private Manager manager;
 	private BitSet mKeysValue;
@@ -129,7 +131,7 @@ public class PlayGamePanel extends JPanel {
 		labelPlayer1GameOver.setForeground(Color.RED);
 		labelPlayer1GameOver.setBounds(720, 170, 150, 30);
 		labelPlayer1GameOver.setVisible(false);
-		
+
 		labelMenuPlayer2 = new JLabel();
 		imgMenuPlayer = new ImageIcon(getClass().getResource(
 				"/image/background_Info.png"));
@@ -161,7 +163,7 @@ public class PlayGamePanel extends JPanel {
 			labelNumHeartPlayer2.setFont(font);
 			labelNumHeartPlayer2.setForeground(Color.RED);
 			labelNumHeartPlayer2.setBounds(780, 435, 100, 30);
-			
+
 			labelPlayer2GameOver = new JLabel("<Game Over>");
 			labelPlayer2GameOver.setFont(font);
 			labelPlayer2GameOver.setForeground(Color.RED);
@@ -196,8 +198,9 @@ public class PlayGamePanel extends JPanel {
 			manager = new Manager(2);
 		}
 		manager.initObjects();
-		manager.readFileToCreateItem("/map/item2.txt");
-		manager.readFileToCreateMap("/map/map2.txt");
+		manager.readFileToCreateItem("/map2/item2.txt");
+		manager.readFileToCreateMap("/map2/map2.txt");
+		manager.readFileToCreateMonster("/map2/monster2.txt");
 		setLayout(null);
 		addKeyListener(new KeyAdapter() {
 			@Override
@@ -210,6 +213,17 @@ public class PlayGamePanel extends JPanel {
 				mKeysValue.clear(arg0.getKeyCode());
 			}
 		});
+	}
+
+	public void changeMap() {
+		if (manager.changeMap()) {
+			manager.deleteMap();
+			manager.getBombPlayer1().setX(BombPlayer.START_X_PLAYER1);
+			manager.getBombPlayer1().setY(BombPlayer.START_Y_PLAYER1);
+			manager.readFileToCreateItem("/map3/item3.txt");
+			manager.readFileToCreateMap("/map3/map3.txt");
+			manager.readFileToCreateMonster("/map3/monster3.txt");
+		}
 	}
 
 	@Override
@@ -238,7 +252,6 @@ public class PlayGamePanel extends JPanel {
 				try {
 					Thread.sleep(30);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				timeGame++;
@@ -252,13 +265,13 @@ public class PlayGamePanel extends JPanel {
 				manager.checkCollisionBombPlayer1AndMonster();
 				manager.checkCollisionBombPlayer1AndBombOfBoss();
 				manager.removeBossAfterBombBang();
-				if(manager.getBombPlayer1().getBombPlayerIsCollisionWithBomb()) {
+				if (manager.getBombPlayer1().getBombPlayerIsCollisionWithBomb()) {
 					manager.setTimeOutToPlayer1Dead(50);
 				}
-				if(manager.getBombPlayer1().getNumsHeart()==0) {
+				if (manager.getBombPlayer1().getNumsHeart() == 0) {
 					labelPlayer1GameOver.setVisible(true);
 				}
-					
+
 				if (numberPlayers == 2) {
 					manager.checkCollisionBombPlayer2AndMonster();
 					manager.downTimeOutToRemoveBombPlayer2(50);
@@ -267,10 +280,11 @@ public class PlayGamePanel extends JPanel {
 					manager.checkCollisionBombPlayer2AndBombOfBoss();
 					labelNumHeartPlayer2.setText("x "
 							+ manager.getBombPlayer2().getNumsHeart());
-					if(manager.getBombPlayer2().getBombPlayerIsCollisionWithBomb()) {
+					if (manager.getBombPlayer2()
+							.getBombPlayerIsCollisionWithBomb()) {
 						manager.setTimeOutToPlayer2Dead(50);
 					}
-					if(manager.getBombPlayer2().getNumsHeart()==0) {
+					if (manager.getBombPlayer2().getNumsHeart() == 0) {
 						labelPlayer2GameOver.setVisible(true);
 					}
 				}
@@ -279,6 +293,8 @@ public class PlayGamePanel extends JPanel {
 				manager.moveBombOfBoss();
 				manager.removeComponentsAfterBombOfBossBang();
 				manager.setLocationForBossAfterDead();
+				changeMap();
+				manager.playMusic();
 				repaint();
 				labelNumHeartPlayer1.setText("x "
 						+ manager.getBombPlayer1().getNumsHeart());

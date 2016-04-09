@@ -4,10 +4,11 @@ import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.sound.midi.Sequencer;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.ngoclt.playsound.Sound;
+import com.ngoclt.playsound.SoundManager;
 
 public class GUI extends JFrame {
 	private PlayGamePanel playGamePanel;
@@ -26,8 +27,9 @@ public class GUI extends JFrame {
 	}
 
 	private void music() {
-		Sound sound = new Sound("D:/menu.wav");
-		sound.start();
+		SoundManager soundManager = new SoundManager();
+		soundManager.getSoundMenu().play();
+		soundManager.getSoundMenu().loop(Sequencer.LOOP_CONTINUOUSLY);
 	}
 
 	private void clickButton() {

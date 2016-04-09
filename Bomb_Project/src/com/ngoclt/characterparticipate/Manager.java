@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.ngoclt.guiandpanel.GUI;
+import com.ngoclt.playsound.SoundManager;
 
 public class Manager {
 	private BombPlayer bombPlayer1, bombPlayer2;
@@ -18,6 +19,7 @@ public class Manager {
 	private ArrayList<Boss> arrBoss;
 	private ArrayList<BombOfBoss> arrBombOfBosses;
 	private RandomAccessFile randomAccessFile;
+	private SoundManager soundManager;
 	private boolean[][] bombPutInMap;
 	private int numRows, numCols;
 	private int powerBomb = 0;
@@ -25,7 +27,7 @@ public class Manager {
 	private boolean bombPlayer2isAppear = true;
 	private int numberPlayers;
 	private int timeCondition = 0;
-
+	
 	public Manager(int numberPlayers) {
 		this.numberPlayers = numberPlayers;
 	}
@@ -43,18 +45,7 @@ public class Manager {
 		arrMonsters = new ArrayList<Monster>();
 		arrBombOfBosses = new ArrayList<BombOfBoss>();
 		arrBoss = new ArrayList<Boss>();
-		Monster monster1 = new Monster(450, 550, ComponentMap.SIZE, 0, 3);
-		arrMonsters.add(monster1);
-		Monster monster2 = new Monster(250, 0, ComponentMap.SIZE, 0, 3);
-		arrMonsters.add(monster2);
-		Monster monster3 = new Monster(100, 150, ComponentMap.SIZE, 0, 3);
-		arrMonsters.add(monster3);
-		Monster monster4 = new Monster(450, 400, ComponentMap.SIZE, 0, 3);
-		arrMonsters.add(monster4);
-		Monster monster5 = new Monster(400, 550, ComponentMap.SIZE, 0, 3);
-		arrMonsters.add(monster5);
-		Monster monster6 = new Monster(0, 400, ComponentMap.SIZE, 0, 3);
-		arrMonsters.add(monster6);
+		soundManager = new SoundManager();
 		Boss boss3 = new Boss(600, 300, 50, 0, 5);
 		arrBoss.add(boss3);
 		Boss boss2 = new Boss(0, 300, 50, 1, 5);
@@ -63,14 +54,6 @@ public class Manager {
 		arrBoss.add(boss4);
 		Boss boss1 = new Boss(275, 0, 50, 3, 5);
 		arrBoss.add(boss1);
-		// Monster monster7 = new Monster(550, 400, ComponentMap.SIZE, 0, 3);
-		// arrMonsters.add(monster7);
-		// Monster monster8 = new Monster(0, 0, ComponentMap.SIZE, 0, 3);
-		// arrMonsters.add(monster8);
-		// Monster monster9 = new Monster(200, 400, ComponentMap.SIZE, 0, 3);
-		// arrMonsters.add(monster9);
-		// Monster monster10 = new Monster(200, 300, ComponentMap.SIZE, 0, 3);
-		// arrMonsters.add(monster10);
 
 		numCols = (GUI.WIDTH) / ComponentMap.SIZE;
 		numRows = GUI.HEIGHT / ComponentMap.SIZE;
@@ -209,16 +192,19 @@ public class Manager {
 					bombPlayer1.setMaxSpeed(true);
 				}
 				arrItemSupports.remove(arrItemSupports.get(i));
+				soundManager.getSoundItem().play();
 			}
 			if (bombPlayer1.checkCollisionWithItem(arrItemSupports.get(i))
 					&& arrItemSupports.get(i).getType() == ItemSupport.BOMB_MORE) {
 				bombPlayer1
 						.setNumBombCanPut(bombPlayer1.getNumBombCanPut() + 1);
 				arrItemSupports.remove(arrItemSupports.get(i));
+				soundManager.getSoundItem().play();
 			}
 			if (bombPlayer1.checkCollisionWithItem(arrItemSupports.get(i))
 					&& arrItemSupports.get(i).getType() == ItemSupport.BOMB_POWER) {
 				arrItemSupports.remove(arrItemSupports.get(i));
+				soundManager.getSoundItem().play();
 				powerBomb++;
 			}
 		}
@@ -236,16 +222,19 @@ public class Manager {
 					bombPlayer2.setMaxSpeed(true);
 				}
 				arrItemSupports.remove(arrItemSupports.get(i));
+				soundManager.getSoundItem().play();
 			}
 			if (bombPlayer2.checkCollisionWithItem(arrItemSupports.get(i))
 					&& arrItemSupports.get(i).getType() == ItemSupport.BOMB_MORE) {
 				bombPlayer2
 						.setNumBombCanPut(bombPlayer2.getNumBombCanPut() + 1);
 				arrItemSupports.remove(arrItemSupports.get(i));
+				soundManager.getSoundItem().play();
 			}
 			if (bombPlayer2.checkCollisionWithItem(arrItemSupports.get(i))
 					&& arrItemSupports.get(i).getType() == ItemSupport.BOMB_POWER) {
 				arrItemSupports.remove(arrItemSupports.get(i));
+				soundManager.getSoundItem().play();
 				powerBomb++;
 			}
 		}
@@ -496,7 +485,10 @@ public class Manager {
 				bombPlayer1.setBombPlayerIsCollisionWithMonster(true);
 				bombPlayer1.setX(BombPlayer.START_X_PLAYER1);
 				bombPlayer1.setY(BombPlayer.START_Y_PLAYER1);
-				bombPlayer1.setNumsHeart(bombPlayer1.getNumsHeart() - 1);
+				if (bombPlayer1.getNumsHeart() > 0) {
+					bombPlayer1.setNumsHeart(bombPlayer1.getNumsHeart() - 1);
+					soundManager.getSoundBomberDie().play();
+				}
 			}
 		}
 
@@ -516,7 +508,10 @@ public class Manager {
 				bombPlayer2.setBombPlayerIsCollisionWithMonster(true);
 				bombPlayer2.setX(BombPlayer.START_X_PLAYER2);
 				bombPlayer2.setY(BombPlayer.START_Y_PLAYER2);
-				bombPlayer2.setNumsHeart(bombPlayer2.getNumsHeart() - 1);
+				if (bombPlayer2.getNumsHeart() > 0) {
+					bombPlayer2.setNumsHeart(bombPlayer2.getNumsHeart() - 1);
+					soundManager.getSoundBomberDie().play();
+				}
 			}
 		}
 	}
@@ -574,12 +569,21 @@ public class Manager {
 
 	public void setLocationForBossAfterDead() {
 		for (int i = 0; i < arrBoss.size(); i++) {
-			if(!arrBoss.get(i).isAlive()) {
+			if (!arrBoss.get(i).isAlive()) {
 				arrBoss.get(i).setLocationForBossAfterDead();
 			}
 		}
 	}
-	
+
+	public void playMusic() {
+		for (int i = 0; i < arrBombs.size(); i++) {
+			if (arrBombs.get(i).getTimeOutToBum() == 0) {
+				soundManager.getSoundBombBang().play();
+			}
+		}
+		
+	}
+
 	public void readFileToCreateMap(String path) {
 		File file = new File(getClass().getResource(path).getPath());
 		try {
@@ -639,6 +643,58 @@ public class Manager {
 			randomAccessFile.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void readFileToCreateMonster(String path) {
+		File file = new File(getClass().getResource(path).getPath());
+		try {
+			randomAccessFile = new RandomAccessFile(file, "rw");
+			String str = randomAccessFile.readLine();
+			int locationY = 0;
+			while (str != null) {
+				int locationX = 0;
+				for (int i = 0; i < str.length(); i++) {
+					String s = str.substring(i, i + 1);
+					int num = Integer.parseInt(s);
+					if (num == 1) {
+						Monster monster = new Monster(locationX
+								* ComponentMap.SIZE, locationY
+								* ComponentMap.SIZE, ComponentMap.SIZE, 0, 3);
+						arrMonsters.add(monster);
+					}
+					locationX++;
+				}
+				locationY++;
+
+				str = randomAccessFile.readLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			randomAccessFile.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public boolean changeMap() {
+		if (arrMonsters.isEmpty() && !arrBoss.get(0).isAlive()
+				&& !arrBoss.get(1).isAlive() && !arrBoss.get(2).isAlive()
+				&& !arrBoss.get(3).isAlive()) {
+			soundManager.getSoundWin().play();
+			return true;
+		} else
+			return false;
+	}
+
+	public void deleteMap() {
+		for (int i = 0; i < arrComponentMaps.size(); i++) {
+			arrComponentMaps.remove(arrComponentMaps.get(i));
+		}
+		for (int i = 0; i < arrItemSupports.size(); i++) {
+			arrItemSupports.remove(arrItemSupports.get(i));
 		}
 	}
 }

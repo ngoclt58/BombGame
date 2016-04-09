@@ -13,7 +13,7 @@ public class BombPlayer extends DadParticipate {
 	public static final int WIDTH_IMG = 45;
 	public static final int HEIGHT_IMG = 45;
 	public static final int WIDTH_CHARACTER = 45;
-	public static final int HEIGHT_CHARACTER = 65;
+	public static final int HEIGHT_CHARACTER = 55;
 	
 	public static final int START_X_PLAYER1 = 650;
 	public static final int START_Y_PLAYER1 = 0;

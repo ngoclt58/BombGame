@@ -10,12 +10,14 @@ public class ComponentMap {
 	private static final int BRICK = 1;
 	private static final int BOX = 2;
 	private static final int ANOTHER_BOX = 3;
+	private static final int GIFT = 4;
+	private static final int CHOCOLATE = 5;
 	public static final int SIZE = 50;
 
 	private int x, y;
 	private int type;
 	private ImageIcon imgIcon;
-	private Image img1, img2, img3;
+	private Image img1, img2, img3, img4, img5;
 
 	public ComponentMap(int x, int y, int type) {
 		super();
@@ -58,6 +60,16 @@ public class ComponentMap {
 			imgIcon = new ImageIcon(getClass().getResource("/image/box2.png"));
 			img3 = imgIcon.getImage();
 			g2d.drawImage(img3, getX(), getY(), SIZE, SIZE, null);
+		}
+		if (type == GIFT) {
+			imgIcon = new ImageIcon(getClass().getResource("/image/gift.png"));
+			img4 = imgIcon.getImage();
+			g2d.drawImage(img4, getX(), getY(), SIZE, SIZE, null);
+		}
+		if (type == CHOCOLATE) {
+			imgIcon = new ImageIcon(getClass().getResource("/image/chocolate.png"));
+			img5 = imgIcon.getImage();
+			g2d.drawImage(img5, getX(), getY(), SIZE, SIZE, null);
 		}
 	}
 

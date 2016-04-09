@@ -7,7 +7,6 @@ import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 
 public class Bomb extends BombFather {
-
 	public static final int WIDTH_IMG = 50;
 	public static final int HEIGHT_IMG = 50;
 	public static final int WIDTH_BOMBBANG = 140;
